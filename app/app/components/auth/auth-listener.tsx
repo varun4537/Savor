@@ -1,43 +1,52 @@
 "use client";
 
 import { useEffect } from "react";
-import { createClient } from "@/lib/supabase";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
 export function AuthListener() {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        const supabase = createClient();
-        if (!supabase) return;
+  useEffect(() => {
+    // Clear any stale Supabase auth tokens left in localStorage from dead/inactive projects
+    try {
+      if (typeof window !== "undefined") {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith("sb-") || key.includes("supabase.auth.token"))) {
+            localStorage.removeItem(key);
+          }
+        }
+      }
+    } catch (e) {}
 
-        // This listener will fire when:
-        // 1. The app loads and restoring a session
-        // 2. The user signs in/out
-        // 3. OAuth redirect happens (it processes the hash)
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' && session) {
-                console.log('User signed in', session.user.email);
+    if (!isSupabaseConfigured()) return;
 
-                // Check if we are on an auth page and should redirect
-                const path = window.location.pathname;
-                if (path === '/login' || path === '/onboarding/signup') {
-                    // If coming from Google Auth, we want to go ensuring we move forward
-                    // Using replace to prevent back-button loops
-                    // We delay slightly to allow any other state updates to process
-                    setTimeout(() => {
-                        router.replace('/onboarding/name');
-                    }, 100);
-                }
+    try {
+      const supabase = createClient();
+      if (!supabase) return;
 
-                router.refresh();
-            }
-        });
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          const path = window.location.pathname;
+          if (path === "/login" || path === "/onboarding/signup") {
+            setTimeout(() => {
+              router.replace("/onboarding/name");
+            }, 100);
+          }
+          router.refresh();
+        }
+      });
 
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [router]);
+      return () => {
+        subscription.unsubscribe();
+      };
+    } catch (err) {
+      console.warn("Auth listener error suppressed:", err);
+    }
+  }, [router]);
 
-    return null; // This component renders nothing
+  return null;
 }

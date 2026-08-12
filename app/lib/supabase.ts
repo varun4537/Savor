@@ -1,19 +1,51 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-// Fallback for when keys are missing (development mode)
-const isMock = !supabaseUrl || !supabaseKey;
+const isValidSupabaseConfig = () => {
+  if (!supabaseUrl || !supabaseKey) return false;
+  if (
+    supabaseUrl.includes("your-project") ||
+    supabaseUrl.includes("placeholder") ||
+    supabaseUrl.includes("dummy")
+  ) {
+    return false;
+  }
+  try {
+    const parsed = new URL(supabaseUrl);
+    return parsed.protocol === "https:" && parsed.hostname.endsWith(".supabase.co");
+  } catch {
+    return false;
+  }
+};
 
-export const supabase = isMock
-    ? null
-    : createSupabaseClient(supabaseUrl, supabaseKey);
+const isConfigured = isValidSupabaseConfig();
 
-export const isSupabaseConfigured = () => !isMock;
+export const supabase = isConfigured
+  ? createSupabaseClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false,
+      },
+    })
+  : null;
 
-// Function to create a new client (for client components)
+export const isSupabaseConfigured = () => isConfigured;
+
 export const createClient = () => {
-    if (isMock) return null;
-    return createSupabaseClient(supabaseUrl, supabaseKey);
+  if (!isConfigured) return null;
+  try {
+    return createSupabaseClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false,
+      },
+    });
+  } catch (err) {
+    console.warn("Could not create Supabase client:", err);
+    return null;
+  }
 };
