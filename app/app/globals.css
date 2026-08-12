@@ -45,7 +45,6 @@
 /* Touch & Mobile Optimizations */
 * {
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
 }
 
 html {
@@ -59,6 +58,39 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+}
+
+/* iOS Touch Slider Enhancements */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #FFE8D6;
+  border-radius: 9999px;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: #F58549;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 4px 10px rgba(245, 133, 73, 0.4);
+  cursor: grab;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: #F58549;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 4px 10px rgba(245, 133, 73, 0.4);
+  cursor: grab;
 }
 
 /* Rich Glassmorphism Utilities */
@@ -115,27 +147,6 @@ body {
   }
 }
 
-@keyframes waterWave {
-  0% {
-    transform: translateX(0) scaleY(1);
-  }
-  50% {
-    transform: translateX(-25%) scaleY(1.05);
-  }
-  100% {
-    transform: translateX(-50%) scaleY(1);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 @keyframes popIn {
   0% {
     opacity: 0;
@@ -164,12 +175,6 @@ body {
 
 .animate-pop-in {
   animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
 }
 
 /* Custom scrollbar */

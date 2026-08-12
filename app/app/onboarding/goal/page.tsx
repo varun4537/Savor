@@ -1,111 +1,115 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { GlassCard } from '@/app/components/ui/glass-card';
-import { Button } from '@/app/components/ui/button';
-import { H1, Text, Caption } from '@/app/components/ui/typography';
-import { ArrowRight, TrendingDown, TrendingUp, Heart, Salad, Check } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { SoftCard } from "@/app/components/ui/soft-card";
+import { Button } from "@/app/components/ui/button";
+import { H1, Text, Caption } from "@/app/components/ui/typography";
+import {
+  ArrowRight,
+  TrendingDown,
+  TrendingUp,
+  Heart,
+  Salad,
+  Check,
+  Sparkles
+} from "lucide-react";
 
 const goals = [
-    { id: 'lose', icon: TrendingDown, label: 'Feel Lighter', description: 'Less weighed down', color: 'text-blue-500' },
-    { id: 'gain', icon: TrendingUp, label: 'Get Stronger', description: 'Build strength', color: 'text-green-500' },
-    { id: 'maintain', icon: Heart, label: 'Stay Balanced', description: 'Keep doing what works', color: 'text-pink-500' },
-    { id: 'eat-better', icon: Salad, label: 'Eat with Intention', description: 'More mindful choices', color: 'text-orange-500' },
+  { id: "lose", label: "Gentle Weight Loss", description: "Feel lighter with sustainable deficit", emoji: "🌱" },
+  { id: "maintain", label: "Mindful Maintenance", description: "Stable energy & vitality", emoji: "🧘" },
+  { id: "gain", label: "Strength & Muscle", description: "Nourish body for active workouts", emoji: "💪" },
+  { id: "eat-better", label: "Intuitive Nutrition", description: "Balanced meals without guilt", emoji: "🥗" },
 ];
 
 export default function GoalPage() {
-    const router = useRouter();
-    const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
+  const router = useRouter();
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(["lose"]);
 
-    const toggleGoal = (id: string) => {
-        setSelectedGoals(prev =>
-            prev.includes(id)
-                ? prev.filter(g => g !== id)
-                : [...prev, id]
-        );
-    };
-
-    const handleContinue = () => {
-        if (selectedGoals.length > 0) {
-            sessionStorage.setItem('onboarding_goals', JSON.stringify(selectedGoals));
-            router.push('/onboarding/lifestyle');
-        }
-    };
-
-    return (
-        <main className="min-h-screen bg-background flex flex-col p-6">
-            {/* Progress */}
-            <div className="flex gap-1 mb-8">
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-muted/30" />
-                <div className="h-1 flex-1 rounded-full bg-muted/30" />
-                <div className="h-1 flex-1 rounded-full bg-muted/30" />
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 flex flex-col justify-center">
-                <div className="text-center mb-8">
-                    <H1 className="text-2xl mb-2">What matters to you?</H1>
-                    <Text className="text-muted">Pick what resonates</Text>
-                </div>
-
-                <div className="w-full max-w-sm mx-auto space-y-3">
-                    {goals.map((goal) => {
-                        const Icon = goal.icon;
-                        const isSelected = selectedGoals.includes(goal.id);
-
-                        return (
-                            <GlassCard
-                                key={goal.id}
-                                onClick={() => toggleGoal(goal.id)}
-                                className={`p-4 cursor-pointer transition-all duration-200 flex items-center gap-4 ${isSelected
-                                    ? 'ring-2 ring-primary bg-primary/5'
-                                    : 'hover:bg-white/60'
-                                    }`}
-                            >
-                                <div className={`w-12 h-12 rounded-full bg-muted/20 flex items-center justify-center ${goal.color}`}>
-                                    <Icon className="w-6 h-6" />
-                                </div>
-                                <div className="flex-1">
-                                    <Text className={`font-medium ${isSelected ? 'text-primary' : ''}`}>
-                                        {goal.label}
-                                    </Text>
-                                    <Caption>{goal.description}</Caption>
-                                </div>
-                                {isSelected && (
-                                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                                        <Check className="w-4 h-4 text-white" />
-                                    </div>
-                                )}
-                            </GlassCard>
-                        );
-                    })}
-                </div>
-
-                {/* Hint for body recomp */}
-                {selectedGoals.includes('lose') && selectedGoals.includes('gain') && (
-                    <div className="max-w-sm mx-auto mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <Caption className="text-green-700 text-center">
-                            💪 Body recomposition! We'll focus on protein and strength training.
-                        </Caption>
-                    </div>
-                )}
-            </div>
-
-            {/* CTA */}
-            <div className="w-full max-w-sm mx-auto">
-                <Button
-                    onClick={handleContinue}
-                    className="w-full py-5"
-                    disabled={selectedGoals.length === 0}
-                >
-                    Continue
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-            </div>
-        </main>
+  const toggleGoal = (id: string) => {
+    setSelectedGoals((prev) =>
+      prev.includes(id) ? (prev.length > 1 ? prev.filter((g) => g !== id) : prev) : [...prev, id]
     );
+  };
+
+  const handleContinue = () => {
+    sessionStorage.setItem("onboarding_goals", JSON.stringify(selectedGoals));
+    router.push("/onboarding/diet");
+  };
+
+  return (
+    <main className="min-h-[100dvh] bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] flex flex-col justify-between p-4 pt-6 pb-28 max-w-md mx-auto relative overflow-y-auto">
+      {/* Top Section */}
+      <div>
+        {/* Progress Bar */}
+        <div className="flex gap-1.5 mb-5">
+          <div className="h-1.5 flex-1 rounded-full bg-primary" />
+          <div className="h-1.5 flex-1 rounded-full bg-primary" />
+          <div className="h-1.5 flex-1 rounded-full bg-primary" />
+          <div className="h-1.5 flex-1 rounded-full bg-amber-200/50" />
+          <div className="h-1.5 flex-1 rounded-full bg-amber-200/50" />
+          <div className="h-1.5 flex-1 rounded-full bg-amber-200/50" />
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-100/80 text-primary text-xs font-bold mb-1.5">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Wellness Intentions</span>
+          </div>
+          <H1 className="text-xl font-black text-text-heading font-heading mb-0.5">
+            What are your goals?
+          </H1>
+          <Text className="text-text-secondary text-xs">
+            Select one or more intentions that resonate with you.
+          </Text>
+        </div>
+
+        {/* Goals List */}
+        <div className="space-y-2.5">
+          {goals.map((goal) => {
+            const isSelected = selectedGoals.includes(goal.id);
+            return (
+              <div
+                key={goal.id}
+                onClick={() => toggleGoal(goal.id)}
+                className={`p-4 rounded-3xl cursor-pointer transition-all flex items-center justify-between border ${
+                  isSelected
+                    ? "bg-white border-primary shadow-sm ring-2 ring-primary/20 scale-[1.01]"
+                    : "bg-white/70 border-amber-200/60 hover:bg-white"
+                }`}
+              >
+                <div className="flex items-center gap-3.5">
+                  <span className="text-2xl">{goal.emoji}</span>
+                  <div>
+                    <p className={`text-xs font-bold ${isSelected ? "text-primary" : "text-text-heading"}`}>
+                      {goal.label}
+                    </p>
+                    <p className="text-[11px] text-text-muted">{goal.description}</p>
+                  </div>
+                </div>
+
+                {isSelected && (
+                  <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow-xs">
+                    <Check className="w-3.5 h-3.5" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Pinned Bottom CTA Bar */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-gradient-to-t from-[#FFF0E0] via-[#FFF0E0]/95 to-transparent z-20">
+        <Button
+          onClick={handleContinue}
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-[#F27233] text-white font-bold text-sm shadow-md shadow-primary/25 hover:opacity-95 transition-all flex items-center justify-center gap-2"
+        >
+          <span>Continue</span>
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </main>
+  );
 }
