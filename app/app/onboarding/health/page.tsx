@@ -1,157 +1,154 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { GlassCard } from '@/app/components/ui/glass-card';
-import { Button } from '@/app/components/ui/button';
-import { H1, Text, Caption } from '@/app/components/ui/typography';
-import { ArrowRight, TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { SoftCard } from "@/app/components/ui/soft-card";
+import { Button } from "@/app/components/ui/button";
+import { H1, H2, Text, Caption } from "@/app/components/ui/typography";
+import {
+  ArrowRight,
+  Flame,
+  Zap,
+  Activity,
+  Sparkles,
+  Heart,
+  ShieldCheck,
+  BatteryCharging
+} from "lucide-react";
 
 export default function HealthPage() {
-    const router = useRouter();
-    const [bmi, setBmi] = useState(0);
-    const [bmiCategory, setBmiCategory] = useState('');
-    const [healthInsights, setHealthInsights] = useState<string[]>([]);
-    const [name, setName] = useState('');
+  const router = useRouter();
+  const [bmr, setBmr] = useState(1450);
+  const [tdee, setTdee] = useState(1900);
+  const [name, setName] = useState("");
+  const [healthInsights, setHealthInsights] = useState<string[]>([]);
 
-    useEffect(() => {
-        const savedName = sessionStorage.getItem('onboarding_name') || 'there';
-        const savedBody = sessionStorage.getItem('onboarding_body');
+  useEffect(() => {
+    const savedName = sessionStorage.getItem("onboarding_name") || "there";
+    const savedBody = sessionStorage.getItem("onboarding_body");
+    const savedGender = sessionStorage.getItem("onboarding_gender") || "male";
+    const savedLifestyle = JSON.parse(sessionStorage.getItem("onboarding_lifestyle") || "{}");
 
-        setName(savedName);
+    setName(savedName);
 
-        if (savedBody) {
-            const body = JSON.parse(savedBody);
-            const heightM = body.heightCm / 100;
-            const calculatedBmi = body.weightKg / (heightM * heightM);
-            setBmi(Math.round(calculatedBmi * 10) / 10);
+    if (savedBody) {
+      const body = JSON.parse(savedBody);
+      const weightKg = body.weightKg || 68;
+      const heightCm = body.heightCm || 172;
+      const age = body.age || 26;
 
-            // Categorize BMI
-            let category = '';
-            const insights: string[] = [];
+      // 1. Basal Metabolic Rate (Mifflin-St Jeor)
+      const bmrOffset = savedGender === "female" ? -161 : 5;
+      const calculatedBmr = Math.round(10 * weightKg + 6.25 * heightCm - 5 * age + bmrOffset);
+      setBmr(calculatedBmr);
 
-            if (calculatedBmi < 18.5) {
-                category = 'Underweight';
-                insights.push('You may benefit from increasing your calorie intake with nutrient-dense foods.');
-            } else if (calculatedBmi < 25) {
-                category = 'Healthy Weight';
-                insights.push('Your weight is in the healthy range. Focus on maintaining balanced nutrition.');
-            } else if (calculatedBmi < 30) {
-                category = 'Overweight';
-                insights.push('A gradual, sustainable approach to weight loss works best for long-term success.');
-            } else {
-                category = 'Obese';
-                insights.push('Small, consistent changes can lead to significant health improvements over time.');
-            }
+      // 2. Activity Multiplier
+      const multiplier = savedLifestyle.activityMultiplier || 1.35;
+      const calculatedTdee = Math.round(calculatedBmr * multiplier);
+      setTdee(calculatedTdee);
 
-            setBmiCategory(category);
+      const insights: string[] = [
+        `Your body naturally burns ~${calculatedBmr} kcal/day just resting, powering your brain, heart, and vital organs.`,
+        `With your daily routine and movement, your total daily maintenance burn is ~${calculatedTdee} kcal.`,
+        "Savor focuses on consistent energy, protein preservation, and vibrant health — without crash diets or restrictive rules.",
+      ];
 
-            // Add age-based insight
-            if (body.age > 35) {
-                insights.push('Metabolism naturally slows after 35. Strength training helps maintain muscle mass.');
-            }
+      setHealthInsights(insights);
+    }
+  }, []);
 
-            setHealthInsights(insights);
-        }
-    }, []);
+  const handleContinue = () => {
+    router.push("/onboarding/results");
+  };
 
-    const getBmiColor = () => {
-        if (bmi < 18.5) return 'text-blue-500';
-        if (bmi < 25) return 'text-green-500';
-        if (bmi < 30) return 'text-amber-500';
-        return 'text-red-500';
-    };
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] flex flex-col p-6 max-w-md mx-auto relative overflow-hidden">
+      {/* Progress Dots */}
+      <div className="flex gap-1 mb-6">
+        <div className="h-1 flex-1 rounded-full bg-primary" />
+        <div className="h-1 flex-1 rounded-full bg-primary" />
+        <div className="h-1 flex-1 rounded-full bg-primary" />
+        <div className="h-1 flex-1 rounded-full bg-primary" />
+        <div className="h-1 flex-1 rounded-full bg-primary" />
+        <div className="h-1 flex-1 rounded-full bg-primary/40" />
+      </div>
 
-    const getBmiPosition = () => {
-        // Returns position percentage for the BMI indicator (scale 15-40)
-        const min = 15, max = 40;
-        const clamped = Math.max(min, Math.min(max, bmi));
-        return ((clamped - min) / (max - min)) * 100;
-    };
+      {/* Hero Header */}
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 mx-auto mb-2 rounded-3xl bg-amber-100 text-primary flex items-center justify-center font-bold text-2xl shadow-xs animate-float">
+          ⚡
+        </div>
+        <H1 className="text-2xl font-black text-text-heading font-heading">
+          Your Energy Profile
+        </H1>
+        <Text className="text-xs text-text-secondary mt-1">
+          Understanding your natural metabolic baseline, {name}
+        </Text>
+      </div>
 
-    const handleContinue = () => {
-        router.push('/onboarding/results');
-    };
+      <div className="w-full space-y-3.5 flex-1">
+        {/* Metabolic Breakdown Card */}
+        <SoftCard className="p-5 bg-white/95 border border-amber-200/80 rounded-3xl shadow-xs">
+          <div className="flex items-center gap-2 mb-3">
+            <BatteryCharging className="w-5 h-5 text-primary" />
+            <Text className="font-bold text-text-heading text-sm">Metabolic Daily Baseline</Text>
+          </div>
 
-    return (
-        <main className="min-h-screen bg-background flex flex-col p-6">
-            {/* Progress */}
-            <div className="flex gap-1 mb-8">
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-primary/50" />
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div className="p-3 bg-amber-50/70 rounded-2xl border border-amber-100 text-center">
+              <span className="text-[10px] font-bold text-text-muted uppercase block">
+                Resting Burn (BMR)
+              </span>
+              <span className="text-2xl font-black text-text-heading font-heading">
+                {bmr}
+              </span>
+              <span className="text-[10px] text-text-secondary block">kcal / day</span>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 flex flex-col justify-center">
-                <div className="text-center mb-8">
-                    <H1 className="text-2xl mb-2">Here's where you are, {name}</H1>
-                    <Text className="text-muted">Understanding your starting point</Text>
-                </div>
-
-                <div className="w-full max-w-sm mx-auto space-y-6">
-                    {/* BMI Card */}
-                    <GlassCard className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-2">
-                                <Activity className="w-5 h-5 text-primary" />
-                                <Text className="font-medium">Body Mass Index</Text>
-                            </div>
-                        </div>
-
-                        <div className="text-center mb-4">
-                            <Text className={`text-4xl font-bold ${getBmiColor()}`}>{bmi}</Text>
-                            <Caption className="block mt-1">{bmiCategory}</Caption>
-                        </div>
-
-                        {/* BMI Scale */}
-                        <div className="relative h-3 bg-gradient-to-r from-blue-400 via-green-400 via-amber-400 to-red-400 rounded-full mb-2">
-                            <div
-                                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-800 rounded-full shadow-md"
-                                style={{ left: `calc(${getBmiPosition()}% - 8px)` }}
-                            />
-                        </div>
-                        <div className="flex justify-between text-xs text-muted">
-                            <span>Under</span>
-                            <span>Healthy</span>
-                            <span>Over</span>
-                            <span>Obese</span>
-                        </div>
-                    </GlassCard>
-
-                    {/* Insights */}
-                    <div className="space-y-3">
-                        {healthInsights.map((insight, i) => (
-                            <GlassCard key={i} className="p-4 flex gap-3">
-                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                    {i === 0 ? (
-                                        bmi < 25 ? <TrendingUp className="w-4 h-4 text-primary" /> : <TrendingDown className="w-4 h-4 text-primary" />
-                                    ) : (
-                                        <Activity className="w-4 h-4 text-primary" />
-                                    )}
-                                </div>
-                                <Text className="text-sm">{insight}</Text>
-                            </GlassCard>
-                        ))}
-                    </div>
-
-                    {/* Note */}
-                    <Caption className="text-center block">
-                        BMI is just one measure. Your overall health depends on many factors including diet, activity, and sleep.
-                    </Caption>
-                </div>
+            <div className="p-3 bg-orange-50/70 rounded-2xl border border-orange-100 text-center">
+              <span className="text-[10px] font-bold text-text-muted uppercase block">
+                Total Daily Burn (TDEE)
+              </span>
+              <span className="text-2xl font-black text-primary font-heading">
+                {tdee}
+              </span>
+              <span className="text-[10px] text-text-secondary block">kcal / day</span>
             </div>
+          </div>
 
-            {/* CTA */}
-            <div className="w-full max-w-sm mx-auto">
-                <Button onClick={handleContinue} className="w-full py-5">
-                    See My Plan
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-            </div>
-        </main>
-    );
+          <div className="p-3 bg-[#FFFDF9] rounded-2xl border border-amber-100/80 text-xs text-text-secondary leading-relaxed">
+            <p className="font-bold text-text-heading mb-0.5">🌱 Why we don't use BMI:</p>
+            <p className="text-[11px]">
+              BMI ignores muscle mass, body composition, and vitality. Energy balance (how much you burn vs eat) is far more useful and respectful of your body.
+            </p>
+          </div>
+        </SoftCard>
+
+        {/* Supportive Insights */}
+        <div className="space-y-2">
+          {healthInsights.map((insight, i) => (
+            <SoftCard key={i} className="p-3.5 bg-white/90 border border-amber-100/80 rounded-2xl flex items-start gap-2.5 shadow-xs">
+              <div className="w-7 h-7 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                <Sparkles className="w-3.5 h-3.5" />
+              </div>
+              <Text className="text-xs text-text-primary leading-relaxed font-medium">
+                {insight}
+              </Text>
+            </SoftCard>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="w-full pt-4 pb-2">
+        <Button
+          onClick={handleContinue}
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-primary to-[#F27233] text-white font-bold text-sm shadow-md shadow-primary/25 hover:opacity-95 transition-all flex items-center justify-center gap-2"
+        >
+          <span>See My Personalized Plan</span>
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </main>
+  );
 }
