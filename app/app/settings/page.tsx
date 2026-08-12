@@ -22,10 +22,13 @@ import {
   RefreshCw,
   Sliders,
   Download,
-  AlertTriangle
+  AlertTriangle,
+  LogOut,
+  LogIn
 } from "lucide-react";
 import Link from "next/link";
 import { useSavorData } from "@/app/hooks/use-savor-data";
+import { useSavorUser } from "@/app/ConvexClientProvider";
 import { AVAILABLE_TEXT_MODELS } from "@/lib/openrouter";
 
 const dietPatterns = [
@@ -45,16 +48,10 @@ const nonVegFrequencies = [
   { id: "daily", label: "Daily" },
 ];
 
-const goalOptions = [
-  { id: "lose", label: "Gentle Weight Loss" },
-  { id: "maintain", label: "Mindful Maintenance" },
-  { id: "gain", label: "Strength & Muscle" },
-  { id: "eat-better", label: "Clean Energy" },
-];
-
 export default function SettingsPage() {
   const router = useRouter();
   const { profile, updateProfile, isConvexConnected, hydration, todayMeals, weightEntries } = useSavorData();
+  const { userId, userEmail, userName, isAuthenticated, signOut } = useSavorUser();
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -86,7 +83,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (profile) {
-      setName(profile.name || "");
+      setName(profile.name || userName || "");
       setAge(profile.age || 26);
       setGender(profile.gender || "male");
       setWeightKg(profile.weightKg || 68);
@@ -98,7 +95,7 @@ export default function SettingsPage() {
       setProteinGoalG(profile.proteinGoalG || 110);
       if (profile.allergies) setAllergies(profile.allergies);
     }
-  }, [profile]);
+  }, [profile, userName]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -128,8 +125,16 @@ export default function SettingsPage() {
     }
   };
 
+  const handleSignOut = async () => {
+    if (confirm("Sign out of Savor? Your guest session will remain on this device.")) {
+      await signOut();
+      router.push("/welcome");
+    }
+  };
+
   const handleExportData = () => {
     const backup = {
+      user: { userId, userEmail, userName },
       profile,
       meals: todayMeals,
       weights: weightEntries,
@@ -145,7 +150,7 @@ export default function SettingsPage() {
   };
 
   const handleResetData = () => {
-    if (confirm("Are you sure you want to reset all Savor data and re-run onboarding?")) {
+    if (confirm("Are you sure you want to reset local data and restart onboarding?")) {
       localStorage.clear();
       router.push("/welcome");
     }
@@ -163,12 +168,12 @@ export default function SettingsPage() {
           </Link>
           <div>
             <H1 className="text-xl font-black text-text-heading font-heading">Settings</H1>
-            <Caption className="text-[11px] text-text-muted">Comprehensive profile & preferences</Caption>
+            <Caption className="text-[11px] text-text-muted">Profile, nutrition goals & cloud sync</Caption>
           </div>
         </div>
 
         {isConvexConnected ? (
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             Convex Synced
           </span>
@@ -215,13 +220,47 @@ export default function SettingsPage() {
           }`}
         >
           <Cpu className="w-3.5 h-3.5" />
-          <span>AI</span>
+          <span>Account</span>
         </button>
       </div>
 
       {/* TAB 1: BODY & PROFILE */}
       {activeTab === "profile" && (
         <div className="space-y-3.5 animate-in fade-in">
+          {/* Account Header Card */}
+          <SoftCard className="p-3.5 bg-white/90 border border-amber-100 rounded-3xl shadow-xs flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-100 text-primary flex items-center justify-center font-bold text-lg">
+                🍊
+              </div>
+              <div>
+                <p className="text-xs font-bold text-text-heading">
+                  {isAuthenticated ? (userEmail || userName || "Account Linked") : "Guest Account"}
+                </p>
+                <p className="text-[10px] text-text-muted">
+                  {isAuthenticated ? "✓ Cloud Protected" : "Saved locally on this device"}
+                </p>
+              </div>
+            </div>
+
+            {isAuthenticated ? (
+              <button
+                onClick={handleSignOut}
+                className="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold hover:bg-rose-100 transition-colors flex items-center gap-1"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>Log Out</span>
+              </button>
+            ) : (
+              <Link href="/login">
+                <button className="px-3 py-1.5 rounded-xl bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors flex items-center gap-1">
+                  <LogIn className="w-3 h-3" />
+                  <span>Sign In</span>
+                </button>
+              </Link>
+            )}
+          </SoftCard>
+
           {/* Name & Age */}
           <SoftCard className="p-4 bg-white/90 border border-amber-100 rounded-3xl shadow-xs">
             <div className="space-y-2.5">
@@ -245,7 +284,7 @@ export default function SettingsPage() {
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    <option value="other">Other / Prefer not to say</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
 
@@ -341,7 +380,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* TAB 2: DIETARY PATTERN & FLEXIBLE HABITS */}
+      {/* TAB 2: DIETARY PATTERN */}
       {activeTab === "diet" && (
         <div className="space-y-3.5 animate-in fade-in">
           <SoftCard className="p-4 bg-white/90 border border-amber-100 rounded-3xl shadow-xs">
@@ -477,9 +516,48 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* TAB 4: AI & ADVANCED */}
+      {/* TAB 4: ACCOUNT & AI */}
       {activeTab === "ai" && (
         <div className="space-y-3.5 animate-in fade-in">
+          {/* Cloud Account Card */}
+          <SoftCard className="p-4 bg-white/90 border border-amber-100 rounded-3xl shadow-xs">
+            <Caption className="text-[10px] uppercase font-bold text-text-muted mb-2 block">
+              Cloud Account & Security
+            </Caption>
+
+            {isAuthenticated ? (
+              <div className="space-y-2">
+                <div className="p-3 bg-green-50 border border-green-200 rounded-2xl flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-green-900">{userEmail}</p>
+                    <p className="text-[10px] text-green-700">Signed in • Synced across devices</p>
+                  </div>
+                  <ShieldCheck className="w-5 h-5 text-green-600" />
+                </div>
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="w-full text-xs font-bold text-rose-600 border-rose-200 hover:bg-rose-50"
+                >
+                  <LogOut className="w-3.5 h-3.5 mr-1" /> Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                <p className="text-xs text-text-secondary">
+                  You are currently using Savor as a guest. Sign in to link your Google account and sync your nutrition history across your phone and computer.
+                </p>
+                <Link href="/login" className="block">
+                  <Button className="w-full bg-primary text-white text-xs font-bold py-3.5 rounded-2xl shadow-xs flex items-center justify-center gap-1.5">
+                    <LogIn className="w-4 h-4" />
+                    <span>Sign in with Google / Email</span>
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </SoftCard>
+
+          {/* AI Model Selection */}
           <SoftCard className="p-4 bg-white/90 border border-amber-100 rounded-3xl shadow-xs">
             <Caption className="text-[10px] uppercase font-bold text-text-muted mb-2 block">
               Active AI Model
@@ -505,6 +583,7 @@ export default function SettingsPage() {
             </div>
           </SoftCard>
 
+          {/* Backup & Reset */}
           <SoftCard className="p-4 bg-white/90 border border-amber-100 rounded-3xl shadow-xs space-y-2.5">
             <Caption className="text-[10px] uppercase font-bold text-text-muted block">
               Data & Backup
@@ -521,13 +600,13 @@ export default function SettingsPage() {
               className="w-full py-2.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
             >
               <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Reset Profile & Re-Onboard</span>
+              <span>Reset Local Profile & Re-Onboard</span>
             </button>
           </SoftCard>
         </div>
       )}
 
-      {/* Confirmation & Save Bar */}
+      {/* Save Success */}
       {savedSuccess && (
         <div className="mt-3 p-3 rounded-2xl bg-green-50 border border-green-200 text-xs font-bold text-green-800 flex items-center justify-center gap-2 animate-in fade-in">
           <ShieldCheck className="w-4 h-4 text-green-600" />
@@ -535,6 +614,7 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* Save Button */}
       <div className="fixed bottom-4 left-4 right-4 max-w-md mx-auto z-30">
         <Button
           onClick={handleSave}

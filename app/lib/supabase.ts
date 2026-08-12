@@ -25,9 +25,9 @@ const isConfigured = isValidSupabaseConfig();
 export const supabase = isConfigured
   ? createSupabaseClient(supabaseUrl, supabaseKey, {
       auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
       },
     })
   : null;
@@ -39,9 +39,9 @@ export const createClient = () => {
   try {
     return createSupabaseClient(supabaseUrl, supabaseKey, {
       auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-        detectSessionInUrl: false,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
       },
     });
   } catch (err) {
