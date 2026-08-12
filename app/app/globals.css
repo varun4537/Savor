@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: Poppins, system-ui, sans-serif;
+  --font-body: Nunito, system-ui, sans-serif;
+
+  /* Savor Warm Design System */
+  --color-app: #FFF7ED;
+  --color-card: #FFFFFF;
+  --color-glass: rgba(255, 247, 237, 0.85);
+
+  /* Typography Colors */
+  --color-text-heading: #772F1A;
+  --color-text-primary: #585123;
+  --color-text-secondary: #6B5B48;
+  --color-muted: #8A7865;
+
+  /* Warm Coral CTAs */
+  --color-primary: #F58549;
+  --color-primary-text: #FFFFFF;
+  --color-primary-dark: #DE6B2F;
+  --color-primary-light: #FF9E6B;
+
+  /* Golden Sand Secondary */
+  --color-secondary: #EEC170;
+  --color-secondary-dark: #D4A855;
+  --color-secondary-light: #F7D493;
+
+  /* Soft Pastel Accents */
+  --color-accent-blue: #68B0D3;
+  --color-accent-green: #68D391;
+  --color-accent-pink: #F687B3;
+  --color-accent-secondary: #EEC170;
+  --color-divider: #E4CDB4;
+
+  --radius-card: 24px;
+  --radius-button: 16px;
+}
+
+:root {
+  --background: var(--color-app);
+  --foreground: var(--color-text-primary);
+}
+
+/* Touch & Mobile Optimizations */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  touch-action: manipulation;
+  background-color: var(--color-app);
+}
+
+body {
+  background-color: var(--color-app);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Rich Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px rgba(119, 47, 26, 0.06);
+}
+
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-glow {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 133, 73, 0.3);
+  box-shadow: 0 0 35px rgba(245, 133, 73, 0.15);
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 133, 73, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 12px rgba(245, 133, 73, 0);
+  }
+}
+
+@keyframes bounceGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes waterWave {
+  0% {
+    transform: translateX(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) scaleY(1.05);
+  }
+  100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  70% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+.animate-bounce-gentle {
+  animation: bounceGentle 2s ease-in-out infinite;
+}
+
+.animate-pop-in {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(119, 47, 26, 0.12);
+  border-radius: 9999px;
+}

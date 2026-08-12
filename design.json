@@ -1,0 +1,135 @@
+{
+    "accessibility": {
+        "contrastMode": "high",
+        "minContrastRatio": {
+            "bodyText": 7,
+            "secondaryText": 4.5,
+            "ctaText": 4.5
+        },
+        "avoidTextOn": [
+            "raw-glass",
+            "image"
+        ]
+    },
+    "colors": {
+        "background": {
+            "app": "#FFF7ED",
+            "card": "#FFFFFF",
+            "glass": "rgba(255, 247, 237, 0.85)",
+            "glassOverlay": "rgba(119, 47, 26, 0.08)"
+        },
+        "text": {
+            "heading": "#772F1A",
+            "primary": "#585123",
+            "secondary": "#6B5B48",
+            "muted": "#8A7865",
+            "inverse": "#FFFFFF"
+        },
+        "cta": {
+            "primary": "#F58549",
+            "primaryText": "#FFFFFF",
+            "secondary": "#EEC170",
+            "secondaryText": "#772F1A"
+        },
+        "divider": "#E4CDB4"
+    },
+    "glassmorphism": {
+        "enabled": true,
+        "rules": {
+            "textPlacement": "solid-or-overlay-only",
+            "backdropBlur": "14px",
+            "tint": "warm",
+            "overlayRequired": true
+        },
+        "overlay": {
+            "background": "rgba(255, 255, 255, 0.88)",
+            "radius": "inherit"
+        }
+    },
+    "typography": {
+        "fontFamily": {
+            "heading": "Poppins, system-ui, sans-serif",
+            "body": "Nunito, system-ui, sans-serif"
+        },
+        "hierarchy": {
+            "h1": {
+                "size": "26px",
+                "weight": 700,
+                "color": "#772F1A"
+            },
+            "h2": {
+                "size": "20px",
+                "weight": 600,
+                "color": "#772F1A"
+            },
+            "h3": {
+                "size": "17px",
+                "weight": 600,
+                "color": "#585123"
+            },
+            "body": {
+                "size": "15px",
+                "weight": 400,
+                "lineHeight": 1.6,
+                "color": "#585123"
+            },
+            "caption": {
+                "size": "13px",
+                "weight": 400,
+                "color": "#6B5B48"
+            }
+        }
+    },
+    "components": {
+        "card": {
+            "background": "#FFFFFF",
+            "radius": "24px",
+            "shadow": "0 8px 24px rgba(0, 0, 0, 0.08)",
+            "textColor": "#585123"
+        },
+        "glassButton": {
+            "background": "rgba(245, 133, 73, 0.22)",
+            "overlay": "rgba(255, 255, 255, 0.9)",
+            "textColor": "#772F1A",
+            "border": "1px solid rgba(119, 47, 26, 0.25)",
+            "shadow": "0 6px 16px rgba(0, 0, 0, 0.12)",
+            "radius": "32px"
+        },
+        "primaryCTA": {
+            "background": "#F58549",
+            "text": "#FFFFFF",
+            "fontWeight": 600,
+            "shadow": "0 10px 28px rgba(245, 133, 73, 0.35)"
+        },
+        "infoChip": {
+            "background": "#EEC170",
+            "text": "#772F1A",
+            "radius": "pill",
+            "fontWeight": 500
+        }
+    },
+    "charts": {
+        "textColor": "#585123",
+        "axisColor": "#6B5B48",
+        "gridColor": "#E4CDB4",
+        "highlight": "#F58549",
+        "background": "#FFFFFF"
+    },
+    "voiceUI": {
+        "mic": {
+            "idle": "#EEC170",
+            "listening": "#F58549",
+            "icon": "#772F1A",
+            "label": {
+                "color": "#585123",
+                "background": "#FFFFFF"
+            }
+        }
+    },
+    "layoutRules": {
+        "maxTextWidth": "32em",
+        "lineLength": "comfortable",
+        "spacing": "generous",
+        "onePrimaryActionPerScreen": true
+    }
+}
