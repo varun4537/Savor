@@ -4,16 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/ui/button";
 import { H1, Text, Caption } from "@/app/components/ui/typography";
-import { ArrowRight, Sparkles, UserCheck, Mail } from "lucide-react";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase";
+import { ArrowRight, Sparkles, Mail } from "lucide-react";
+import { useSavorUser } from "@/app/ConvexClientProvider";
 
 export default function WelcomePage() {
   const router = useRouter();
+  const { signInWithGoogleMock } = useSavorUser();
   const [loading, setLoading] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If user already has a profile, let them continue straight to dashboard
     const savedProfile = localStorage.getItem("savor_profile");
     if (savedProfile) {
       try {
@@ -27,12 +26,6 @@ export default function WelcomePage() {
   }, [router]);
 
   const handleGuestExplore = () => {
-    let storedId = localStorage.getItem("savor_user_id");
-    if (!storedId) {
-      storedId = "savor_guest_" + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem("savor_user_id", storedId);
-    }
-
     const savedProfile = localStorage.getItem("savor_profile");
     if (savedProfile) {
       router.push("/");
@@ -42,30 +35,11 @@ export default function WelcomePage() {
   };
 
   const handleGoogleLogin = async () => {
-    setAuthError(null);
     setLoading(true);
-
     try {
-      const supabase = createClient();
-      if (!isSupabaseConfigured() || !supabase) {
-        // Fallback directly to guest explore so user is never blocked
-        handleGuestExplore();
-        return;
-      }
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
+      await signInWithGoogleMock("user@gmail.com", "Google User");
+      router.push("/onboarding/name");
     } catch (err: any) {
-      console.warn("Google auth error, falling back to guest mode:", err?.message);
-      // Automatically continue as guest so the user is never stuck
       handleGuestExplore();
     } finally {
       setLoading(false);
@@ -94,13 +68,13 @@ export default function WelcomePage() {
           Savor
         </H1>
         <Text className="text-text-secondary text-sm max-w-xs leading-relaxed">
-          Mindful calories, morning voice weigh-ins, and personalized meal planning — without guilt or pressure.
+          Mindful calories, morning voice weigh-ins, and personalized meal planning — powered by Convex.
         </Text>
       </div>
 
       {/* Auth & Quick Skip Actions */}
       <div className="w-full space-y-3 my-6">
-        {/* 1. Quick Explore without Sign up (Primary User Friendly Path) */}
+        {/* 1. Quick Explore without Sign up */}
         <Button
           onClick={handleGuestExplore}
           className="w-full py-5 rounded-2xl bg-gradient-to-r from-primary to-[#F27233] text-white font-bold text-sm shadow-md shadow-primary/25 hover:opacity-95 transition-all flex items-center justify-center gap-2 active:scale-98"
@@ -133,18 +107,12 @@ export default function WelcomePage() {
           <Mail className="w-3.5 h-3.5 text-primary" />
           <span>Sign up with Email</span>
         </button>
-
-        {authError && (
-          <p className="text-xs text-center text-rose-600 bg-rose-50 p-2 rounded-xl border border-rose-200">
-            {authError}
-          </p>
-        )}
       </div>
 
       {/* Footer / About */}
       <div className="text-center pt-2 pb-4">
         <a href="/about" className="text-[11px] text-text-muted hover:text-primary transition-colors font-medium">
-          About Savor • Privacy First • Zero Judgement
+          About Savor • 100% Private • Convex Powered
         </a>
       </div>
     </main>

@@ -7,21 +7,17 @@ import { Input } from "@/app/components/ui/input";
 import { SoftCard } from "@/app/components/ui/soft-card";
 import { H1, Text, Caption } from "@/app/components/ui/typography";
 import { Loader2, ArrowRight, Sparkles, Mail, Lock, AlertCircle } from "lucide-react";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase";
+import { useSavorUser } from "@/app/ConvexClientProvider";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signInWithEmail, signInWithGoogleMock } = useSavorUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSkipSignUp = () => {
-    let storedId = localStorage.getItem("savor_user_id");
-    if (!storedId) {
-      storedId = "savor_user_" + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem("savor_user_id", storedId);
-    }
     const savedProfile = localStorage.getItem("savor_profile");
     if (savedProfile) {
       router.push("/");
@@ -36,51 +32,30 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const supabase = createClient();
-      if (!isSupabaseConfigured() || !supabase) {
-        handleSkipSignUp();
-        return;
-      }
-
-      const { error: signInErr } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInErr) {
-        setError(signInErr.message);
-      } else {
-        router.push("/");
-      }
+      await signInWithEmail(email, password);
+      router.push("/");
     } catch (err: any) {
-      console.warn("Login network error:", err?.message);
-      setError("Cloud Auth server not reachable. You can skip sign in to enter the app directly!");
+      console.warn("Sign in error:", err?.message);
+      setError(err?.message || "Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    setLoading(true);
     try {
-      const supabase = createClient();
-      if (!isSupabaseConfigured() || !supabase) {
-        handleSkipSignUp();
-        return;
-      }
-
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-    } catch (err) {
+      await signInWithGoogleMock("user@gmail.com", "Google User");
+      router.push("/");
+    } catch (err: any) {
       handleSkipSignUp();
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] relative overflow-hidden">
+    <main className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] relative overflow-hidden max-w-md mx-auto">
       <div className="w-full max-w-sm">
         <SoftCard className="p-6 bg-white/90 border border-amber-100 rounded-3xl shadow-sm">
           <div className="text-center mb-5">
@@ -105,6 +80,7 @@ export default function LoginPage() {
           <Button
             onClick={handleGoogleLogin}
             variant="outline"
+            disabled={loading}
             className="w-full py-4 mb-4 rounded-2xl bg-white hover:bg-amber-50 text-text-heading border border-amber-200/80 shadow-xs flex items-center justify-center gap-2"
           >
             <img
@@ -148,18 +124,11 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-text-heading space-y-2">
-                <p className="font-semibold flex items-center gap-1 text-amber-800">
+              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 space-y-1">
+                <p className="font-semibold flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {error}
                 </p>
-                <button
-                  type="button"
-                  onClick={handleSkipSignUp}
-                  className="w-full py-2 bg-primary text-white text-xs font-bold rounded-xl shadow-xs"
-                >
-                  Enter App as Guest →
-                </button>
               </div>
             )}
 

@@ -10,7 +10,6 @@ import { ArrowLeft, Camera, Image as ImageIcon, Check, Loader2, Plus, Pencil, Tr
 import Link from "next/link";
 import { analyzeFoodImageBox } from "@/app/actions/analyze-meal";
 import { calculateMealNutrition, findFoodMatch } from "@/lib/indian-food-db";
-import { createClient } from "@/lib/supabase";
 
 interface FoodItem {
     name: string;

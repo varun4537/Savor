@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase';
 import { SoftCard } from '@/app/components/ui/soft-card';
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';

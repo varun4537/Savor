@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Nunito } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
-import { AuthListener } from "@/app/components/auth/auth-listener";
 
 const poppins = Poppins({
   variable: "--font-heading",
@@ -43,7 +42,6 @@ export default function RootLayout({
         className={`${poppins.variable} ${nunito.variable} antialiased bg-app text-text-primary min-h-screen selection:bg-primary/20 selection:text-text-heading`}
       >
         <ConvexClientProvider>
-          <AuthListener />
           {children}
         </ConvexClientProvider>
       </body>

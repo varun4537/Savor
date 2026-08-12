@@ -5,22 +5,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { H1, Text, Caption } from "@/app/components/ui/typography";
-import { Mail, Lock, ArrowRight, Sparkles, AlertCircle } from "lucide-react";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase";
+import { Mail, Lock, ArrowRight, Sparkles, AlertCircle, Loader2 } from "lucide-react";
+import { useSavorUser } from "@/app/ConvexClientProvider";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { signUpWithEmail, signInWithGoogleMock } = useSavorUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSkipSignUp = () => {
-    let storedId = localStorage.getItem("savor_user_id");
-    if (!storedId) {
-      storedId = "savor_user_" + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem("savor_user_id", storedId);
-    }
     router.push("/onboarding/name");
   };
 
@@ -30,53 +26,25 @@ export default function SignUpPage() {
     setError("");
 
     try {
-      const supabase = createClient();
-      if (!isSupabaseConfigured() || !supabase) {
-        // Automatically allow user to proceed locally without blocking
-        handleSkipSignUp();
-        return;
-      }
-
-      const { data, error: signUpErr } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (signUpErr) {
-        setError(signUpErr.message);
-      } else if (data.session) {
-        router.push("/onboarding/name");
-      } else {
-        setError("Account created! Check your email or skip sign up below.");
-      }
+      await signUpWithEmail(email, password);
+      router.push("/onboarding/name");
     } catch (err: any) {
-      console.warn("Supabase auth network error:", err?.message);
-      setError("Cloud Auth server not connected. You can skip sign up to explore the app instantly!");
+      console.warn("Sign up error:", err?.message);
+      setError(err?.message || "Could not create account. You can explore as a guest!");
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignUp = async () => {
+    setLoading(true);
     try {
-      const supabase = createClient();
-      if (!isSupabaseConfigured() || !supabase) {
-        handleSkipSignUp();
-        return;
-      }
-
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/onboarding/name`,
-        },
-      });
+      await signInWithGoogleMock("user@gmail.com", "Google User");
+      router.push("/onboarding/name");
     } catch (err: any) {
-      console.warn("Google sign up error:", err);
       handleSkipSignUp();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,6 +78,7 @@ export default function SignUpPage() {
         <Button
           onClick={handleGoogleSignUp}
           variant="outline"
+          disabled={loading}
           className="w-full py-4 mb-4 rounded-2xl bg-white hover:bg-amber-50 text-text-heading border border-amber-200/80 shadow-xs flex items-center justify-center gap-2"
         >
           <img
@@ -161,18 +130,11 @@ export default function SignUpPage() {
           </div>
 
           {error && (
-            <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-text-heading space-y-2">
-              <p className="font-semibold flex items-center gap-1 text-amber-800">
+            <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 space-y-1">
+              <p className="font-semibold flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {error}
               </p>
-              <button
-                type="button"
-                onClick={handleSkipSignUp}
-                className="w-full py-2 bg-primary text-white text-xs font-bold rounded-xl shadow-xs"
-              >
-                Continue into App as Guest →
-              </button>
             </div>
           )}
 
@@ -181,7 +143,7 @@ export default function SignUpPage() {
             className="w-full py-4 rounded-2xl bg-white border border-amber-300 text-text-heading font-bold text-xs hover:bg-amber-50"
             disabled={loading}
           >
-            {loading ? "Creating..." : "Sign Up with Email"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign Up with Email"}
           </Button>
         </form>
 

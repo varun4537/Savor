@@ -2,6 +2,19 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // User accounts (Convex native auth)
+  users: defineTable({
+    userId: v.string(), // Unique account identifier
+    email: v.string(),
+    name: v.optional(v.string()),
+    passwordHash: v.optional(v.string()),
+    authProvider: v.string(), // "email" | "google" | "guest"
+    avatarUrl: v.optional(v.string()),
+    createdAt: v.string(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_email", ["email"]),
+
   // User profiles & onboarding wellness goals
   profiles: defineTable({
     userId: v.string(), // Local/session/auth unique ID
