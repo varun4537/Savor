@@ -13,6 +13,7 @@ export default function WelcomePage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // If user already has a completed profile, redirect straight to dashboard
     const savedProfile = localStorage.getItem("savor_profile");
     if (savedProfile) {
       try {
@@ -38,7 +39,12 @@ export default function WelcomePage() {
     setLoading(true);
     try {
       await signInWithGoogleMock("user@gmail.com", "Google User");
-      router.push("/onboarding/name");
+      const savedProfile = localStorage.getItem("savor_profile");
+      if (savedProfile) {
+        router.push("/");
+      } else {
+        router.push("/onboarding/name");
+      }
     } catch (err: any) {
       handleGuestExplore();
     } finally {
