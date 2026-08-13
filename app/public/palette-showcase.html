@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Savor – Cheerful & Vibrant UI Mockup Showcase</title>
+  
+  <!-- Google Fonts: Fredoka, Baloo 2, Quicksand, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Theme Definitions */
+    :root {
+      --font-fun: 'Fredoka', cursive, sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    .font-fun { font-family: var(--font-fun); }
+    .font-body { font-family: var(--font-body); }
+    
+    /* Smooth Bouncy Animations */
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-6deg); }
+      75% { transform: rotate(6deg); }
+    }
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .animate-wiggle { animation: wiggle 2.5s ease-in-out infinite; }
+    .animate-bounce-gentle { animation: bounceGentle 2s ease-in-out infinite; }
+    .animate-pop { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    
+    /* Claymorphic & Playful Shadows */
+    .shadow-clay {
+      box-shadow: 0 8px 0px rgba(0, 0, 0, 0.08), 0 15px 25px rgba(0, 0, 0, 0.04);
+    }
+    .shadow-clay-primary {
+      box-shadow: 0 6px 0px var(--color-primary-dark), 0 12px 20px rgba(0, 0, 0, 0.12);
+    }
+    .shadow-clay-primary:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px var(--color-primary-dark), 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 12px;
+      border-radius: 9999px;
+      background: #FFE8D6;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      border: 4px solid #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      cursor: grab;
+    }
+    
+    /* Custom Theme Classes */
+    .theme-citrus {
+      --color-primary: #FF6B35;
+      --color-primary-dark: #D94814;
+      --color-primary-light: #FF9E79;
+      --color-accent-yellow: #FFD166;
+      --color-accent-green: #06D6A0;
+      --color-accent-blue: #118AB2;
+      --color-accent-pink: #EF476F;
+      --bg-gradient: linear-gradient(180deg, #FFFDF8 0%, #FFF4E6 50%, #FFEAD2 100%);
+      --card-bg: #FFFFFF;
+      --text-heading: #4A1E00;
+    }
+    
+    .theme-berry {
+      --color-primary: #FF3366;
+      --color-primary-dark: #C9184A;
+      --color-primary-light: #FF758F;
+      --color-accent-yellow: #FFB703;
+      --color-accent-green: #10B981;
+      --color-accent-blue: #00B4D8;
+      --color-accent-pink: #F72585;
+      --bg-gradient: linear-gradient(180deg, #FCF9FF 0%, #FFF0F5 50%, #FFE3EC 100%);
+      --card-bg: #FFFFFF;
+      --text-heading: #48002B;
+    }
+    
+    .theme-tropical {
+      --color-primary: #FF5A1F;
+      --color-primary-dark: #CC3700;
+      --color-primary-light: #FF8A50;
+      --color-accent-yellow: #FFE600;
+      --color-accent-green: #70E000;
+      --color-accent-blue: #00E5FF;
+      --color-accent-pink: #FF007F;
+      --bg-gradient: linear-gradient(180deg, #F9FDFA 0%, #F0FDF4 40%, #E6FCFF 100%);
+      --card-bg: #FFFFFF;
+      --text-heading: #0B4F37;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 font-body text-slate-800 min-h-screen py-8 px-4 flex flex-col items-center">
+
+  <!-- Top Controller Bar -->
+  <header class="max-w-md w-full mb-6 text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow-sm border border-slate-200 text-xs font-extrabold text-slate-700 mb-3">
+      <span>🎨 Savor Bright & Cheerful Redesign Mocks</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 font-fun tracking-wide">
+      Pick Your Favorite Vibe
+    </h1>
+    <p class="text-xs text-slate-500 mt-1">
+      Choose a bright palette and play with the live interactive components below!
+    </p>
+
+    <!-- Theme Switcher Tabs -->
+    <div class="grid grid-cols-3 gap-2 mt-4 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
+      <button onclick="setTheme('citrus')" id="tab-citrus" class="py-2.5 px-2 rounded-xl text-xs font-bold font-fun transition-all bg-amber-500 text-white shadow-sm flex flex-col items-center gap-0.5">
+        <span class="text-base">🍊</span>
+        <span>1. Sunshine Citrus</span>
+      </button>
+      <button onclick="setTheme('berry')" id="tab-berry" class="py-2.5 px-2 rounded-xl text-xs font-bold font-fun transition-all text-slate-600 hover:bg-slate-50 flex flex-col items-center gap-0.5">
+        <span class="text-base">🍓</span>
+        <span>2. Juicy Berry</span>
+      </button>
+      <button onclick="setTheme('tropical')" id="tab-tropical" class="py-2.5 px-2 rounded-xl text-xs font-bold font-fun transition-all text-slate-600 hover:bg-slate-50 flex flex-col items-center gap-0.5">
+        <span class="text-base">🌴</span>
+        <span>3. Electric Tropic</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Frame Container -->
+  <main id="app-container" class="w-full max-w-sm rounded-[36px] p-5 shadow-2xl border-4 border-white transition-all duration-500 theme-citrus relative overflow-hidden" style="background: var(--bg-gradient);">
+    
+    <!-- Floating Cheerful Mascot & Header -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <div id="mascot-badge" class="w-13 h-13 rounded-2xl bg-white shadow-clay flex items-center justify-center text-3xl animate-bounce-gentle border-2 border-amber-200">
+          🍊
+        </div>
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-wider text-amber-800/70 block font-fun">Good morning, Varun!</span>
+          <h2 class="text-xl font-black text-slate-900 font-fun tracking-tight">Ready to shine? ✨</h2>
+        </div>
+      </div>
+
+      <div class="w-10 h-10 rounded-2xl bg-white shadow-sm border border-amber-200 flex items-center justify-center text-lg">
+        ⚙️
+      </div>
+    </div>
+
+    <!-- 1. MORNING CHECK-IN HERO (SUPER TACTILE) -->
+    <div class="p-4 rounded-3xl bg-white shadow-clay border-2 border-amber-100 mb-4 animate-pop">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-100 text-amber-800 inline-block font-fun">
+            ☀️ Morning Weigh-in
+          </span>
+          <h3 class="text-base font-black text-slate-900 font-fun mt-1">What's the scale saying today?</h3>
+        </div>
+        <span class="text-2xl animate-wiggle">⚖️</span>
+      </div>
+
+      <p class="text-xs text-slate-600 mb-3">
+        Tap below or speak out loud — no guilt, just noticing trends!
+      </p>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button class="py-3 px-3 rounded-2xl text-white font-bold text-xs font-fun transition-all shadow-clay-primary flex items-center justify-center gap-1.5" style="background: var(--color-primary);">
+          <span>🎙️ Speak Weight</span>
+        </button>
+        <button class="py-3 px-3 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs font-fun transition-all border border-amber-200 flex items-center justify-center gap-1">
+          <span>✏️ Type 68.2 kg</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. DAILY ENERGY & CALORIE RING (VIBRANT COLORS) -->
+    <div class="p-4 rounded-3xl bg-white shadow-clay border-2 border-amber-100 mb-4 animate-pop">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase font-fun">Energy Fuel</span>
+          <h3 class="text-lg font-black text-slate-900 font-fun">1,240 <span class="text-xs font-medium text-slate-500">/ 1,850 kcal</span></h3>
+        </div>
+        
+        <!-- Vibrant Progress Pill -->
+        <span class="px-3 py-1 rounded-full text-xs font-black text-white font-fun shadow-sm" style="background: var(--color-accent-green);">
+          67% Nourished 🔋
+        </span>
+      </div>
+
+      <!-- Chunky Colorful Multi-segment Progress Bar -->
+      <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden p-0.5 flex gap-1 mb-3 border border-slate-200">
+        <div class="h-full rounded-full transition-all duration-500" style="width: 35%; background: var(--color-primary);" title="Breakfast (420 kcal)"></div>
+        <div class="h-full rounded-full transition-all duration-500" style="width: 25%; background: var(--color-accent-yellow);" title="Lunch (380 kcal)"></div>
+        <div class="h-full rounded-full transition-all duration-500" style="width: 15%; background: var(--color-accent-pink);" title="Snacks (180 kcal)"></div>
+      </div>
+
+      <!-- Macro Badges with Pop Colors -->
+      <div class="grid grid-cols-3 gap-2 text-center font-fun">
+        <div class="p-2 rounded-2xl bg-orange-50 border border-orange-200">
+          <span class="text-[9px] font-bold text-orange-600 block uppercase">Protein 🥩</span>
+          <span class="text-sm font-black text-orange-950">78g</span>
+          <span class="text-[9px] text-orange-500 block">goal 110g</span>
+        </div>
+        <div class="p-2 rounded-2xl bg-amber-50 border border-amber-200">
+          <span class="text-[9px] font-bold text-amber-700 block uppercase">Carbs 🍚</span>
+          <span class="text-sm font-black text-amber-950">142g</span>
+          <span class="text-[9px] text-amber-600 block">steady energy</span>
+        </div>
+        <div class="p-2 rounded-2xl bg-rose-50 border border-rose-200">
+          <span class="text-[9px] font-bold text-rose-600 block uppercase">Fats 🥑</span>
+          <span class="text-sm font-black text-rose-950">38g</span>
+          <span class="text-[9px] text-rose-500 block">hormone balance</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AQUATIC HYDRATION BAR (PLAYFUL WATER BUBBLES) -->
+    <div class="p-4 rounded-3xl bg-gradient-to-r from-sky-50 to-cyan-50 border-2 border-sky-200 shadow-clay mb-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl animate-bounce-gentle">💧</span>
+          <div>
+            <h4 class="text-xs font-black text-sky-950 font-fun">Hydration Level</h4>
+            <span class="text-[10px] font-bold text-sky-700">6 / 8 glasses (~1.5L)</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button onclick="adjustWater(-1)" class="w-8 h-8 rounded-xl bg-white text-sky-700 font-black border border-sky-200 flex items-center justify-center active:scale-95 shadow-xs">
+            −
+          </button>
+          <button onclick="adjustWater(1)" class="w-8 h-8 rounded-xl text-white font-black flex items-center justify-center active:scale-95 shadow-xs" style="background: var(--color-accent-blue);">
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Animated Glass Bubbles -->
+      <div id="water-stack" class="flex justify-between items-center h-8 px-1">
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs">💧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-200/50 text-sky-400 text-xs flex items-center justify-center">🫧</div>
+        <div class="w-7 h-7 rounded-xl bg-sky-200/50 text-sky-400 text-xs flex items-center justify-center">🫧</div>
+      </div>
+    </div>
+
+    <!-- 4. ONBOARDING SLIDER DEMO (TACTILE IPHONE CONTROLS) -->
+    <div class="p-4 rounded-3xl bg-white shadow-clay border-2 border-amber-100 mb-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-black text-slate-800 font-fun">📏 Interactive Height Demo</span>
+        <span id="slider-val" class="text-sm font-black text-primary font-fun px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200">172 cm</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="adjustSlider(-1)" class="w-9 h-9 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 font-black flex items-center justify-center active:scale-95 shadow-xs">
+          −
+        </button>
+        <input id="demo-range" type="range" min="130" max="215" value="172" oninput="updateSlider(this.value)" class="flex-1">
+        <button onclick="adjustSlider(1)" class="w-9 h-9 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 font-black flex items-center justify-center active:scale-95 shadow-xs">
+          +
+        </button>
+      </div>
+    </div>
+
+    <!-- Primary Action Button with Bouncy Depth -->
+    <button class="w-full py-4 rounded-2xl text-white font-black text-sm font-fun transition-all shadow-clay-primary flex items-center justify-center gap-2" style="background: var(--color-primary);">
+      <span>Log a Delicious Meal ✨</span>
+      <span>→</span>
+    </button>
+  </main>
+
+  <!-- Typography Comparison Table -->
+  <section class="max-w-md w-full mt-8 p-5 bg-white rounded-3xl shadow-sm border border-slate-200 text-xs">
+    <h3 class="text-sm font-black text-slate-900 font-fun mb-2">🔤 Fun Typography Recommendations:</h3>
+    <ul class="space-y-2 text-slate-600">
+      <li class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+        <strong class="text-slate-900 font-fun text-sm">Fredoka (Heading)</strong> + <strong>Plus Jakarta Sans (Body)</strong>:
+        <span class="block text-slate-500 mt-0.5">Ultra cheerful, friendly, rounded geometry without feeling childish. Used by modern top wellness apps.</span>
+      </li>
+      <li class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+        <strong class="text-slate-900 font-fun text-sm" style="font-family: 'Baloo 2', cursive;">Baloo 2 (Heading)</strong> + <strong>Quicksand (Body)</strong>:
+        <span class="block text-slate-500 mt-0.5">Warm, bouncy, soft terminals, especially tailored for joyful Indian & global companion designs.</span>
+      </li>
+    </ul>
+  </section>
+
+  <script>
+    function setTheme(theme) {
+      const container = document.getElementById('app-container');
+      const mascot = document.getElementById('mascot-badge');
+      
+      container.className = "w-full max-w-sm rounded-[36px] p-5 shadow-2xl border-4 border-white transition-all duration-500 relative overflow-hidden theme-" + theme;
+      
+      document.querySelectorAll('header button').forEach(b => {
+        b.className = "py-2.5 px-2 rounded-xl text-xs font-bold font-fun transition-all text-slate-600 hover:bg-slate-50 flex flex-col items-center gap-0.5";
+      });
+      
+      const activeBtn = document.getElementById('tab-' + theme);
+      if (activeBtn) {
+        activeBtn.className = "py-2.5 px-2 rounded-xl text-xs font-bold font-fun transition-all bg-slate-900 text-white shadow-sm flex flex-col items-center gap-0.5";
+      }
+
+      if (theme === 'citrus') mascot.innerText = '🍊';
+      if (theme === 'berry') mascot.innerText = '🍓';
+      if (theme === 'tropical') mascot.innerText = '🍍';
+    }
+
+    function updateSlider(val) {
+      document.getElementById('slider-val').innerText = val + ' cm';
+    }
+
+    function adjustSlider(delta) {
+      const slider = document.getElementById('demo-range');
+      let val = parseInt(slider.value) + delta;
+      val = Math.max(130, Math.min(215, val));
+      slider.value = val;
+      updateSlider(val);
+    }
+
+    let waterCount = 6;
+    function adjustWater(delta) {
+      waterCount = Math.max(1, Math.min(8, waterCount + delta));
+      const stack = document.getElementById('water-stack');
+      stack.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        const div = document.createElement('div');
+        if (i < waterCount) {
+          div.className = "w-7 h-7 rounded-xl bg-sky-500 text-white text-xs flex items-center justify-center shadow-xs animate-pop";
+          div.innerText = '💧';
+        } else {
+          div.className = "w-7 h-7 rounded-xl bg-sky-200/50 text-sky-400 text-xs flex items-center justify-center";
+          div.innerText = '🫧';
+        }
+        stack.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
