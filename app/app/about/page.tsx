@@ -3,275 +3,258 @@
 import { useState } from "react";
 import { SoftCard } from "@/app/components/ui/soft-card";
 import { H1, H2, Text, Caption } from "@/app/components/ui/typography";
-import { ArrowLeft, Info, Shield, FileText, Mail, AlertTriangle, Lock, Heart } from "lucide-react";
+import {
+  ArrowLeft,
+  Info,
+  Shield,
+  FileText,
+  Mail,
+  AlertTriangle,
+  Lock,
+  Heart,
+  Database,
+  Sparkles,
+  ShieldCheck,
+  Zap
+} from "lucide-react";
 import Link from "next/link";
+import { CheerfulIcon } from "@/app/components/ui/cheerful-icon";
 
-type Section = 'about' | 'disclaimer' | 'privacy' | 'terms';
+type Section = "about" | "science" | "disclaimer" | "privacy" | "terms";
 
 export default function AboutPage() {
-    const [activeSection, setActiveSection] = useState<Section>('about');
+  const [activeSection, setActiveSection] = useState<Section>("about");
 
-    const sections = [
-        { id: 'about' as Section, label: 'About', icon: Info },
-        { id: 'disclaimer' as Section, label: 'Disclaimer', icon: AlertTriangle },
-        { id: 'privacy' as Section, label: 'Privacy', icon: Lock },
-        { id: 'terms' as Section, label: 'Terms', icon: FileText },
-    ];
+  const sections = [
+    { id: "about" as Section, label: "About Savor", icon: Info },
+    { id: "science" as Section, label: "Nutrition & Science", icon: Database },
+    { id: "disclaimer" as Section, label: "Health Note", icon: AlertTriangle },
+    { id: "privacy" as Section, label: "Privacy", icon: Lock },
+    { id: "terms" as Section, label: "Terms", icon: FileText },
+  ];
 
-    return (
-        <main className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-blue-50/30 relative overflow-hidden">
-            <div className="fixed top-[-20%] right-[-20%] w-[80%] h-[80%] bg-secondary/10 rounded-full blur-3xl -z-10" />
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] p-4 pt-6 pb-12 max-w-md mx-auto relative overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <Link href="/">
+          <button className="w-10 h-10 rounded-2xl bg-white border border-amber-200 shadow-xs flex items-center justify-center text-text-heading hover:bg-amber-50 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </Link>
+        <div>
+          <H1 className="text-xl font-black text-text-heading font-heading">About Savor</H1>
+          <Caption className="text-[11px] text-text-muted">Science, mission & privacy</Caption>
+        </div>
+      </div>
 
-            <div className="p-4 pb-8 max-w-md mx-auto">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-4">
-                    <Link href="/settings">
-                        <button className="p-2 rounded-full hover:bg-white/50 transition-colors">
-                            <ArrowLeft className="w-5 h-5" />
-                        </button>
-                    </Link>
-                    <H1 className="text-xl">About & Legal</H1>
-                </div>
+      {/* Tabs */}
+      <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1 scrollbar-none">
+        {sections.map((sec) => (
+          <button
+            key={sec.id}
+            onClick={() => setActiveSection(sec.id)}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all border ${
+              activeSection === sec.id
+                ? "bg-primary text-white border-primary shadow-xs"
+                : "bg-white/80 text-text-secondary border-amber-200/60 hover:bg-white"
+            }`}
+          >
+            <sec.icon className="w-3.5 h-3.5" />
+            <span>{sec.label}</span>
+          </button>
+        ))}
+      </div>
 
-                {/* Tabs */}
-                <div className="flex gap-1 mb-4 overflow-x-auto pb-2">
-                    {sections.map(sec => (
-                        <button
-                            key={sec.id}
-                            onClick={() => setActiveSection(sec.id)}
-                            className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap transition-all ${activeSection === sec.id
-                                    ? 'bg-primary text-white'
-                                    : 'bg-white/60 text-gray-600 hover:bg-white'
-                                }`}
-                        >
-                            <sec.icon className="w-3 h-3" />
-                            {sec.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Content */}
-                <SoftCard className="p-5">
-                    {/* ===== ABOUT ===== */}
-                    {activeSection === 'about' && (
-                        <div className="space-y-4">
-                            <div className="text-center mb-6">
-                                <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                    <Heart className="w-8 h-8 text-white" />
-                                </div>
-                                <H1 className="text-2xl">Savor</H1>
-                                <Caption>Your AI Nutrition Companion</Caption>
-                            </div>
-
-                            <div className="space-y-3 text-sm text-gray-600">
-                                <Text>
-                                    <strong>Savor</strong> is an AI-powered nutrition tracking app designed to make
-                                    healthy eating simple and accessible for everyone.
-                                </Text>
-
-                                <Text>
-                                    Our mission is to help you understand your food better through intelligent
-                                    meal analysis, personalized recommendations, and intuitive tracking.
-                                </Text>
-
-                                <div className="pt-4 border-t border-gray-100">
-                                    <Text className="font-medium text-gray-800">Created by</Text>
-                                    <Text>Varun Das</Text>
-                                </div>
-
-                                <div className="flex items-center gap-2 pt-2">
-                                    <Mail className="w-4 h-4 text-primary" />
-                                    <a href="mailto:varundas4537@gmail.com" className="text-primary hover:underline">
-                                        varundas4537@gmail.com
-                                    </a>
-                                </div>
-
-                                <Caption className="block pt-4 text-center">
-                                    Version 1.3.0 • Made with ❤️ in India
-                                </Caption>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ===== DISCLAIMER ===== */}
-                    {activeSection === 'disclaimer' && (
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-orange-500 mb-4">
-                                <AlertTriangle className="w-5 h-5" />
-                                <H2 className="text-lg">Health Disclaimer</H2>
-                            </div>
-
-                            <div className="space-y-3 text-sm text-gray-600">
-                                <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-                                    <Text className="text-orange-800 font-medium">
-                                        ⚠️ This app is NOT a substitute for professional medical advice.
-                                    </Text>
-                                </div>
-
-                                <Text>
-                                    <strong>AI-Generated Estimates:</strong> All calorie and nutritional information
-                                    provided by Savor is generated using artificial intelligence and should be
-                                    treated as <em>estimates only</em>. Actual values may vary significantly.
-                                </Text>
-
-                                <Text>
-                                    <strong>Not Medical Advice:</strong> The information provided in this app is
-                                    for informational and educational purposes only. It is not intended to be a
-                                    substitute for professional medical advice, diagnosis, or treatment.
-                                </Text>
-
-                                <Text>
-                                    <strong>Consult Healthcare Providers:</strong> Always seek the advice of your
-                                    physician, dietitian, or other qualified health provider with any questions
-                                    you may have regarding nutrition, diet, or medical conditions.
-                                </Text>
-
-                                <Text>
-                                    <strong>Health Conditions:</strong> If you have diabetes, heart disease,
-                                    eating disorders, allergies, or any other health conditions, consult a
-                                    healthcare professional before making dietary changes.
-                                </Text>
-
-                                <Text>
-                                    <strong>No Liability:</strong> The creators of Savor shall not be held liable
-                                    for any health issues, allergic reactions, or other adverse effects that may
-                                    result from following suggestions made by this app.
-                                </Text>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ===== PRIVACY ===== */}
-                    {activeSection === 'privacy' && (
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-blue-500 mb-4">
-                                <Lock className="w-5 h-5" />
-                                <H2 className="text-lg">Privacy Policy</H2>
-                            </div>
-
-                            <div className="space-y-3 text-sm text-gray-600">
-                                <Caption className="block">Last updated: January 2026</Caption>
-
-                                <Text>
-                                    <strong>Data We Collect:</strong>
-                                </Text>
-                                <ul className="list-disc list-inside space-y-1 text-gray-600">
-                                    <li>Account information (email, name)</li>
-                                    <li>Profile data (age, weight, height, goals)</li>
-                                    <li>Meal logs and food photos</li>
-                                    <li>Usage analytics (anonymous)</li>
-                                </ul>
-
-                                <Text>
-                                    <strong>How We Use Your Data:</strong>
-                                </Text>
-                                <ul className="list-disc list-inside space-y-1 text-gray-600">
-                                    <li>To provide personalized nutrition recommendations</li>
-                                    <li>To analyze meals using AI</li>
-                                    <li>To track your progress and goals</li>
-                                    <li>To improve our services</li>
-                                </ul>
-
-                                <Text>
-                                    <strong>Data Storage:</strong> Your data is stored securely using Supabase
-                                    (cloud database) with encryption at rest and in transit.
-                                </Text>
-
-                                <Text>
-                                    <strong>Third-Party Services:</strong> We use OpenRouter for AI analysis.
-                                    Food images are processed by AI models but are not stored permanently by
-                                    these services.
-                                </Text>
-
-                                <Text>
-                                    <strong>Your Rights:</strong> You can delete your account and all associated
-                                    data at any time by logging out and contacting us.
-                                </Text>
-
-                                <Text>
-                                    <strong>Contact:</strong> For privacy concerns, email us at{" "}
-                                    <a href="mailto:varundas4537@gmail.com" className="text-primary hover:underline">
-                                        varundas4537@gmail.com
-                                    </a>
-                                </Text>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ===== TERMS ===== */}
-                    {activeSection === 'terms' && (
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-green-500 mb-4">
-                                <FileText className="w-5 h-5" />
-                                <H2 className="text-lg">Terms of Use</H2>
-                            </div>
-
-                            <div className="space-y-3 text-sm text-gray-600">
-                                <Caption className="block">Effective: January 2026</Caption>
-
-                                <Text>
-                                    By using Savor, you agree to these terms:
-                                </Text>
-
-                                <Text>
-                                    <strong>1. Acceptance:</strong> By accessing or using this app, you agree to
-                                    be bound by these Terms of Use and our Privacy Policy.
-                                </Text>
-
-                                <Text>
-                                    <strong>2. Use License:</strong> You are granted a limited, non-exclusive,
-                                    personal license to use Savor for your own nutritional tracking purposes.
-                                </Text>
-
-                                <Text>
-                                    <strong>3. Accuracy:</strong> While we strive for accuracy, AI-generated
-                                    nutritional data is approximate. You acknowledge that estimates may be
-                                    inaccurate.
-                                </Text>
-
-                                <Text>
-                                    <strong>4. User Conduct:</strong> You agree not to misuse the app, attempt
-                                    to access others' data, or use the service for any unlawful purpose.
-                                </Text>
-
-                                <Text>
-                                    <strong>5. Account Responsibility:</strong> You are responsible for
-                                    maintaining the confidentiality of your account.
-                                </Text>
-
-                                <Text>
-                                    <strong>6. Modifications:</strong> We reserve the right to modify or
-                                    discontinue the service at any time without notice.
-                                </Text>
-
-                                <Text>
-                                    <strong>7. Limitation of Liability:</strong> Savor and its creators shall
-                                    not be liable for any indirect, incidental, or consequential damages.
-                                </Text>
-
-                                <Text>
-                                    <strong>8. Governing Law:</strong> These terms are governed by the laws
-                                    of India. Any disputes shall be resolved in courts of India.
-                                </Text>
-
-                                <Text>
-                                    <strong>Contact:</strong> Questions about these terms? Email{" "}
-                                    <a href="mailto:varundas4537@gmail.com" className="text-primary hover:underline">
-                                        varundas4537@gmail.com
-                                    </a>
-                                </Text>
-                            </div>
-                        </div>
-                    )}
-                </SoftCard>
-
-                {/* Footer */}
-                <div className="text-center mt-6">
-                    <Caption className="text-[10px] text-gray-400">
-                        © 2026 Savor. All rights reserved.
-                    </Caption>
-                </div>
+      {/* Content Container */}
+      <SoftCard className="p-5 bg-white/95 border border-amber-100 rounded-3xl shadow-xs">
+        {/* ===== 1. ABOUT ===== */}
+        {activeSection === "about" && (
+          <div className="space-y-4 animate-in fade-in">
+            <div className="text-center mb-5">
+              <div className="w-16 h-16 mx-auto mb-2 rounded-3xl bg-amber-100 text-primary flex items-center justify-center font-bold text-3xl shadow-xs animate-bounce-gentle">
+                🍊
+              </div>
+              <H1 className="text-2xl font-black text-text-heading font-heading">Savor</H1>
+              <Caption className="text-primary font-bold text-xs">
+                Your Gentle, Cheerful Wellness Companion
+              </Caption>
             </div>
-        </main>
-    );
+
+            <div className="space-y-3 text-xs text-text-secondary leading-relaxed">
+              <Text>
+                <strong>Savor</strong> is an AI-assisted wellness companion built to help you cultivate mindful eating, morning consistency, and positive body awareness — completely free from guilt or calorie shaming.
+              </Text>
+
+              <Text>
+                Our philosophy is simple: healthy living should feel bright, fun, and natural. Instead of rigid clinical rules, we celebrate small daily check-ins and delicious cultural foods.
+              </Text>
+
+              <div className="pt-3 border-t border-amber-100 space-y-1">
+                <Text className="font-bold text-text-heading">Created by</Text>
+                <Text className="font-semibold">Varun Das</Text>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1 text-xs">
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:varundas4537@gmail.com" className="text-primary font-bold hover:underline">
+                  varundas4537@gmail.com
+                </a>
+              </div>
+
+              <Caption className="block pt-4 text-center text-[10px] text-text-muted">
+                Savor • Powered by Convex & Real-time AI
+              </Caption>
+            </div>
+          </div>
+        )}
+
+        {/* ===== 2. NUTRITION & SCIENCE VALIDATION ===== */}
+        {activeSection === "science" && (
+          <div className="space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <H2 className="text-base font-black text-text-heading font-heading">
+                Nutrition & Scientific Validation
+              </H2>
+            </div>
+
+            <p className="text-xs text-text-secondary leading-relaxed">
+              How Savor calculates and validates every calorie, macro, and metabolic requirement:
+            </p>
+
+            <div className="space-y-3">
+              {/* Point 1: IFCT / NIN */}
+              <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1">
+                <div className="flex items-center gap-2">
+                  <Database className="w-4 h-4 text-primary" />
+                  <strong className="text-xs text-text-heading">
+                    National Institute of Nutrition (NIN / ICMR)
+                  </strong>
+                </div>
+                <p className="text-[11px] text-text-secondary leading-relaxed">
+                  Our food database uses the official <em>Indian Food Composition Tables (IFCT)</em> published by the National Institute of Nutrition and Indian Council of Medical Research. Every standard dish (roti, dals, curries, dosa, biryani, paneer, eggs, idli) is mapped to lab-tested macronutrient and caloric densities.
+                </p>
+              </div>
+
+              {/* Point 2: Mifflin-St Jeor */}
+              <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-700" />
+                  <strong className="text-xs text-text-heading">
+                    Mifflin-St Jeor Clinical Equation
+                  </strong>
+                </div>
+                <p className="text-[11px] text-text-secondary leading-relaxed">
+                  Recommended by the <em>American Dietetic Association (ADA)</em> and <em>World Health Organization (WHO)</em> as the gold standard for clinical Basal Metabolic Rate (BMR) and Total Daily Energy Expenditure (TDEE).
+                </p>
+              </div>
+
+              {/* Point 3: USDA FoodData Central */}
+              <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <strong className="text-xs text-text-heading">
+                    USDA FoodData Central
+                  </strong>
+                </div>
+                <p className="text-[11px] text-text-secondary leading-relaxed">
+                  Supplements global ingredients, fruits, whole grains, and lean proteins with verified peer-reviewed nutritional profiles.
+                </p>
+              </div>
+
+              {/* Point 4: Vision AI Anchoring */}
+              <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1">
+                <strong className="text-xs text-emerald-900 block">
+                  🛡️ Zero-Hallucination Food Anchoring
+                </strong>
+                <p className="text-[11px] text-emerald-800 leading-relaxed">
+                  Vision models (Gemini / Kimi) identify the foods on your plate, but Savor anchors the caloric and macro calculations to our verified clinical database to ensure trustworthy estimates.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===== 3. HEALTH DISCLAIMER ===== */}
+        {activeSection === "disclaimer" && (
+          <div className="space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-2 text-amber-700 mb-2">
+              <AlertTriangle className="w-5 h-5" />
+              <H2 className="text-base font-black font-heading">Health & Medical Note</H2>
+            </div>
+
+            <div className="space-y-3 text-xs text-text-secondary leading-relaxed">
+              <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 font-medium text-amber-900">
+                ⚠️ Savor is a mindfulness and educational tool, not a medical device.
+              </div>
+
+              <Text>
+                <strong>Educational Estimates:</strong> All nutritional values and calorie guidelines provided by Savor are intended as helpful estimates to build awareness.
+              </Text>
+
+              <Text>
+                <strong>Consult Professionals:</strong> If you have diabetes, PCOS, thyroid disorders, eating disorders, or any medical condition, always consult a qualified doctor or registered dietitian before making significant dietary changes.
+              </Text>
+            </div>
+          </div>
+        )}
+
+        {/* ===== 4. PRIVACY ===== */}
+        {activeSection === "privacy" && (
+          <div className="space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-2 text-sky-700 mb-2">
+              <Lock className="w-5 h-5" />
+              <H2 className="text-base font-black font-heading">Privacy & Data Security</H2>
+            </div>
+
+            <div className="space-y-3 text-xs text-text-secondary leading-relaxed">
+              <p>
+                <strong>Your Data Belongs to You:</strong> Your meals, weights, and goals are securely isolated to your user identity and stored in real-time Convex cloud with encryption in transit and at rest.
+              </p>
+
+              <p>
+                <strong>Zero Selling of Personal Info:</strong> We never sell your personal health logs to third parties or advertisers.
+              </p>
+
+              <p>
+                <strong>Export & Delete Anytime:</strong> You can export your full JSON backup or reset your local data at any time from the Settings tab.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ===== 5. TERMS ===== */}
+        {activeSection === "terms" && (
+          <div className="space-y-4 animate-in fade-in">
+            <div className="flex items-center gap-2 text-emerald-700 mb-2">
+              <FileText className="w-5 h-5" />
+              <H2 className="text-base font-black font-heading">Terms of Use</H2>
+            </div>
+
+            <div className="space-y-3 text-xs text-text-secondary leading-relaxed">
+              <p>
+                By using Savor, you agree to use the application for personal wellness and mindful nutritional awareness.
+              </p>
+              <p>
+                For questions or suggestions, reach out anytime at{" "}
+                <a href="mailto:varundas4537@gmail.com" className="text-primary font-bold hover:underline">
+                  varundas4537@gmail.com
+                </a>.
+              </p>
+            </div>
+          </div>
+        )}
+      </SoftCard>
+
+      {/* Footer */}
+      <div className="text-center mt-6">
+        <Caption className="text-[11px] text-text-muted">
+          © 2026 Savor • Made with 🧡 in India
+        </Caption>
+      </div>
+    </main>
+  );
 }

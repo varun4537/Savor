@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles, Mic, Scale, Flame, Droplets, Heart } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { CheerfulIcon } from "@/app/components/ui/cheerful-icon";
 
 export default function ShowcasePage() {
   const [selectedTheme, setSelectedTheme] = useState<"citrus" | "berry" | "tropical">("citrus");
@@ -103,16 +104,16 @@ export default function ShowcasePage() {
               </h2>
             </div>
           </div>
-          <Link href="/">
-            <div className="w-10 h-10 rounded-2xl bg-white/90 shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-700">
-              <ArrowLeft className="w-4 h-4" />
+          <Link href="/about">
+            <div className="w-10 h-10 rounded-2xl bg-white/90 shadow-sm border border-slate-200/80 flex items-center justify-center text-slate-700 text-xs font-black">
+              ℹ️
             </div>
           </Link>
         </div>
 
-        {/* 1. Morning Weigh-in Hero Card */}
+        {/* 1. Morning Weigh-in Hero Card with CheerfulIcon */}
         <div className={`p-4 rounded-3xl bg-white shadow-sm border ${current.cardBorder} mb-3.5`}>
-          <div className="flex items-start justify-between mb-1.5">
+          <div className="flex items-start justify-between mb-2">
             <div>
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${current.pillBg}`}>
                 ☀️ Morning Habit
@@ -121,7 +122,7 @@ export default function ShowcasePage() {
                 Say your morning weight
               </h3>
             </div>
-            <span className="text-2xl">⚖️</span>
+            <CheerfulIcon name="scale" size="sm" />
           </div>
           <p className="text-xs text-slate-600 mb-3">
             Tap and speak out loud — gentle, no pressure!
@@ -132,7 +133,7 @@ export default function ShowcasePage() {
               className="py-3 px-2 rounded-2xl text-white font-black text-xs transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95"
               style={{ backgroundColor: current.primary }}
             >
-              <Mic className="w-3.5 h-3.5" />
+              <CheerfulIcon name="mic" size="sm" className="w-5 h-5 text-xs shadow-none border-0" />
               <span>Speak Weight</span>
             </button>
             <button className="py-3 px-2 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-800 font-black text-xs border border-slate-200 flex items-center justify-center gap-1">
@@ -165,22 +166,25 @@ export default function ShowcasePage() {
             <div className="h-full rounded-full" style={{ width: "15%", backgroundColor: current.accentBlue }}></div>
           </div>
 
-          {/* 3 Macro Cards */}
+          {/* 3 Macro Cards with Cheerful Icons */}
           <div className="grid grid-cols-3 gap-1.5 text-center">
-            <div className="p-2 rounded-2xl bg-orange-50/80 border border-orange-200">
-              <span className="text-[9px] font-black text-orange-600 block uppercase">Protein 🥩</span>
+            <div className="p-2 rounded-2xl bg-orange-50/80 border border-orange-200 flex flex-col items-center">
+              <CheerfulIcon name="protein" size="sm" className="w-7 h-7 text-xs mb-1" />
+              <span className="text-[9px] font-black text-orange-600 block uppercase">Protein</span>
               <span className="text-sm font-black text-orange-950 font-heading">78g</span>
               <span className="text-[9px] text-orange-500 block">goal 110g</span>
             </div>
-            <div className="p-2 rounded-2xl bg-amber-50/80 border border-amber-200">
-              <span className="text-[9px] font-black text-amber-700 block uppercase">Carbs 🍚</span>
+            <div className="p-2 rounded-2xl bg-amber-50/80 border border-amber-200 flex flex-col items-center">
+              <CheerfulIcon name="carbs" size="sm" className="w-7 h-7 text-xs mb-1" />
+              <span className="text-[9px] font-black text-amber-700 block uppercase">Carbs</span>
               <span className="text-sm font-black text-amber-950 font-heading">142g</span>
               <span className="text-[9px] text-amber-600 block">fuel</span>
             </div>
-            <div className="p-2 rounded-2xl bg-rose-50/80 border border-rose-200">
-              <span className="text-[9px] font-black text-rose-600 block uppercase">Fats 🥑</span>
-              <span className="text-sm font-black text-rose-950 font-heading">38g</span>
-              <span className="text-[9px] text-rose-500 block">healthy</span>
+            <div className="p-2 rounded-2xl bg-emerald-50/80 border border-emerald-200 flex flex-col items-center">
+              <CheerfulIcon name="fat" size="sm" className="w-7 h-7 text-xs mb-1" />
+              <span className="text-[9px] font-black text-emerald-700 block uppercase">Fats</span>
+              <span className="text-sm font-black text-emerald-950 font-heading">38g</span>
+              <span className="text-[9px] text-emerald-500 block">healthy</span>
             </div>
           </div>
         </div>
@@ -189,7 +193,7 @@ export default function ShowcasePage() {
         <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-50 to-cyan-50 border-2 border-sky-200 shadow-sm mb-3.5">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <span className="text-2xl animate-bounce-gentle">💧</span>
+              <CheerfulIcon name="water" size="sm" />
               <div>
                 <h4 className="text-xs font-black text-sky-950 font-heading">Hydration Goal</h4>
                 <span className="text-[10px] font-bold text-sky-700">{waterGlasses} / 8 glasses (~{(waterGlasses * 0.25).toFixed(1)}L)</span>
@@ -233,7 +237,7 @@ export default function ShowcasePage() {
         {/* 4. Touch-Friendly Slider Demo */}
         <div className={`p-4 rounded-3xl bg-white shadow-sm border ${current.cardBorder} mb-4`}>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-black text-slate-800 font-heading">📏 Tactile Slider Demo</span>
+            <span className="text-xs font-black text-slate-800 font-heading">📏 Tactile Stepper Slider</span>
             <span
               className="text-xs font-black px-2.5 py-0.5 rounded-full text-white"
               style={{ backgroundColor: current.primary }}
@@ -276,11 +280,10 @@ export default function ShowcasePage() {
         </button>
       </div>
 
-      {/* Typography Preview */}
-      <div className="max-w-sm w-full mt-6 p-4 bg-white rounded-3xl border border-slate-200 text-xs text-slate-600">
-        <p className="font-black text-slate-900 mb-1">🔤 Suggested Typography Pairing:</p>
-        <p>• <strong>Fredoka / Baloo 2</strong>: Cheerful rounded headings full of energy and warmth.</p>
-        <p>• <strong>Plus Jakarta Sans / Quicksand</strong>: Clean, highly readable, bouncy body text.</p>
+      <div className="mt-4 text-center">
+        <Link href="/about" className="text-xs text-slate-500 hover:text-slate-800 underline font-medium">
+          View Science, Nutrition Sources & About Savor →
+        </Link>
       </div>
     </main>
   );
