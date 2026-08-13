@@ -33,6 +33,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSavorData } from "@/app/hooks/use-savor-data";
+import { BackgroundWaterEffect } from "@/app/components/ui/background-water-effect";
+import { CheerfulIcon } from "@/app/components/ui/cheerful-icon";
 
 const moods = [
   { id: "great", icon: Zap, label: "Energized", color: "text-amber-500", bg: "bg-amber-100/80" },
@@ -136,6 +138,12 @@ export default function Home() {
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FFF7ED] to-[#FFF0E0] pb-24">
+      {/* Subtle Background Water Level Rise Effect */}
+      <BackgroundWaterEffect
+        currentGlasses={hydration.glasses}
+        targetGlasses={hydration.targetGlasses || 8}
+      />
+
       {/* Soft ambient background glows */}
       <div className="fixed top-[-10%] right-[-10%] w-[70vw] h-[70vw] max-w-[400px] max-h-[400px] bg-secondary/15 rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="fixed bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] max-w-[350px] max-h-[350px] bg-primary/10 rounded-full blur-3xl -z-10 pointer-events-none" />
@@ -322,52 +330,43 @@ export default function Home() {
           </SoftCard>
         )}
 
-        {/* ===== HYDRATION TRACKER ===== */}
-        <SoftCard className="p-4 bg-gradient-to-r from-sky-50/80 via-cyan-50/80 to-blue-50/80 border border-sky-200/60 rounded-3xl shadow-xs">
-          <div className="flex items-center justify-between">
+        {/* ===== WATER INTAKE WITH SUBTLE BACKGROUND WATER RISE ===== */}
+        <SoftCard className="p-4 bg-gradient-to-r from-sky-50/90 via-cyan-50/90 to-blue-50/90 border border-sky-200/80 rounded-3xl shadow-sm">
+          <div className="flex items-center justify-between gap-3 mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0 shadow-inner">
-                <Droplets className="w-5 h-5 animate-bounce-gentle" />
-              </div>
+              <CheerfulIcon name="water" size="sm" />
               <div>
-                <p className="text-xs font-bold text-text-heading">Hydration</p>
-                <p className="text-[11px] text-text-secondary font-medium">
-                  {hydration.glasses} / {hydration.targetGlasses} glasses today
+                <div className="flex items-center gap-2">
+                  <p className="text-xs font-bold text-sky-950 font-heading">Hydration Flow</p>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-100 text-sky-800">
+                    {Math.min(100, Math.round((hydration.glasses / (hydration.targetGlasses || 8)) * 100))}%
+                  </span>
+                </div>
+                <p className="text-[11px] text-sky-800 font-medium">
+                  {hydration.glasses} / {hydration.targetGlasses || 8} glasses (~{(hydration.glasses * 0.25).toFixed(1)}L)
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            {hydration.glasses > 0 && (
               <button
                 onClick={() => decrementGlass()}
-                className="w-7 h-7 rounded-xl bg-white/90 text-text-secondary border border-sky-200 text-xs font-bold flex items-center justify-center hover:bg-white active:scale-95"
-                title="Subtract glass"
+                className="text-[10px] text-sky-600 hover:text-sky-900 underline font-semibold"
+                title="Undo 1 glass"
               >
-                -
+                Undo -1
               </button>
-
-              <div className="flex gap-1 px-1">
-                {[...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-2.5 h-6 rounded-full transition-all duration-300 ${
-                      i < hydration.glasses
-                        ? "bg-sky-500 shadow-xs shadow-sky-400 scale-105"
-                        : "bg-sky-200/50"
-                    }`}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={() => incrementGlass()}
-                className="w-7 h-7 rounded-xl bg-sky-500 text-white text-xs font-bold flex items-center justify-center shadow-xs shadow-sky-400/30 hover:bg-sky-600 active:scale-95"
-                title="Add glass"
-              >
-                +
-              </button>
-            </div>
+            )}
           </div>
+
+          {/* Single Bouncy Add Water Button */}
+          <button
+            onClick={() => incrementGlass()}
+            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white font-bold text-xs shadow-md shadow-sky-400/25 flex items-center justify-center gap-2 active:scale-98 transition-all"
+          >
+            <span className="text-base">💧</span>
+            <span>+ Drink 1 Glass (250ml)</span>
+          </button>
         </SoftCard>
 
         {/* ===== NAVIGATION HUB GRID ===== */}

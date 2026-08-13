@@ -4,11 +4,12 @@ import { useState } from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { CheerfulIcon } from "@/app/components/ui/cheerful-icon";
+import { BackgroundWaterEffect } from "@/app/components/ui/background-water-effect";
 
 export default function ShowcasePage() {
   const [selectedTheme, setSelectedTheme] = useState<"citrus" | "berry" | "tropical">("citrus");
   const [heightVal, setHeightVal] = useState(172);
-  const [waterGlasses, setWaterGlasses] = useState(6);
+  const [waterGlasses, setWaterGlasses] = useState(3);
 
   const themeConfig = {
     citrus: {
@@ -52,18 +53,18 @@ export default function ShowcasePage() {
   const current = themeConfig[selectedTheme];
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 sm:p-8 flex flex-col items-center justify-center font-sans">
+    <main className="min-h-screen bg-slate-100 p-4 sm:p-8 flex flex-col items-center justify-center font-sans relative">
       {/* Top Header */}
       <div className="max-w-sm w-full mb-5 text-center">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-black text-slate-800 mb-2 shadow-xs">
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span>Interactive Cheerful Palette Showcase</span>
+          <span>Interactive Water Background & Cheerful Mocks</span>
         </div>
         <h1 className="text-2xl font-black text-slate-900 font-heading">
           Select Your Design Vibe
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Tap between themes to test live colors, sliders & buttons!
+          Tap <strong>+ Drink 1 Glass</strong> to watch the background water level rise!
         </p>
 
         {/* Theme Picker Pills */}
@@ -89,6 +90,9 @@ export default function ShowcasePage() {
       <div
         className={`w-full max-w-sm rounded-[38px] p-5 shadow-2xl border-4 border-white transition-all duration-500 bg-gradient-to-b ${current.bgGradient} relative overflow-hidden`}
       >
+        {/* Subtle Water Filling Up in the Background */}
+        <BackgroundWaterEffect currentGlasses={waterGlasses} targetGlasses={8} />
+
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -111,8 +115,8 @@ export default function ShowcasePage() {
           </Link>
         </div>
 
-        {/* 1. Morning Weigh-in Hero Card with CheerfulIcon */}
-        <div className={`p-4 rounded-3xl bg-white shadow-sm border ${current.cardBorder} mb-3.5`}>
+        {/* 1. Morning Weigh-in Hero Card */}
+        <div className={`p-4 rounded-3xl bg-white/95 shadow-sm border ${current.cardBorder} mb-3.5`}>
           <div className="flex items-start justify-between mb-2">
             <div>
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${current.pillBg}`}>
@@ -143,7 +147,7 @@ export default function ShowcasePage() {
         </div>
 
         {/* 2. Vibrant Energy Ring & Macro Badges */}
-        <div className={`p-4 rounded-3xl bg-white shadow-sm border ${current.cardBorder} mb-3.5`}>
+        <div className={`p-4 rounded-3xl bg-white/95 shadow-sm border ${current.cardBorder} mb-3.5`}>
           <div className="flex items-center justify-between mb-2">
             <div>
               <span className="text-[10px] font-black text-slate-400 uppercase">Daily Fuel</span>
@@ -166,7 +170,7 @@ export default function ShowcasePage() {
             <div className="h-full rounded-full" style={{ width: "15%", backgroundColor: current.accentBlue }}></div>
           </div>
 
-          {/* 3 Macro Cards with Cheerful Icons */}
+          {/* 3 Macro Cards */}
           <div className="grid grid-cols-3 gap-1.5 text-center">
             <div className="p-2 rounded-2xl bg-orange-50/80 border border-orange-200 flex flex-col items-center">
               <CheerfulIcon name="protein" size="sm" className="w-7 h-7 text-xs mb-1" />
@@ -189,53 +193,47 @@ export default function ShowcasePage() {
           </div>
         </div>
 
-        {/* 3. Aquatic Hydration Tracker */}
-        <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-50 to-cyan-50 border-2 border-sky-200 shadow-sm mb-3.5">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
+        {/* 3. STREAMLINED HYDRATION WIDGET WITH SINGLE ADD BUTTON */}
+        <div className="p-4 rounded-3xl bg-gradient-to-r from-sky-50/90 via-cyan-50/90 to-blue-50/90 border-2 border-sky-200 shadow-sm mb-3.5">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2.5">
               <CheerfulIcon name="water" size="sm" />
               <div>
-                <h4 className="text-xs font-black text-sky-950 font-heading">Hydration Goal</h4>
-                <span className="text-[10px] font-bold text-sky-700">{waterGlasses} / 8 glasses (~{(waterGlasses * 0.25).toFixed(1)}L)</span>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-black text-sky-950 font-heading">Hydration Flow</h4>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-sky-100 text-sky-800">
+                    {Math.min(100, Math.round((waterGlasses / 8) * 100))}%
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold text-sky-700">
+                  {waterGlasses} / 8 glasses (~{(waterGlasses * 0.25).toFixed(1)}L)
+                </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            {waterGlasses > 0 && (
               <button
-                onClick={() => setWaterGlasses((p) => Math.max(1, p - 1))}
-                className="w-8 h-8 rounded-xl bg-white text-sky-700 font-black border border-sky-200 flex items-center justify-center active:scale-95"
+                onClick={() => setWaterGlasses((p) => Math.max(0, p - 1))}
+                className="text-[10px] text-sky-600 hover:text-sky-900 underline font-semibold"
+                title="Undo 1 glass"
               >
-                −
+                Undo -1
               </button>
-              <button
-                onClick={() => setWaterGlasses((p) => Math.min(10, p + 1))}
-                className="w-8 h-8 rounded-xl text-white font-black flex items-center justify-center active:scale-95 shadow-xs"
-                style={{ backgroundColor: current.accentBlue }}
-              >
-                +
-              </button>
-            </div>
+            )}
           </div>
 
-          <div className="flex justify-between items-center h-8 px-1">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                onClick={() => setWaterGlasses(i + 1)}
-                className={`w-7 h-7 rounded-xl flex items-center justify-center cursor-pointer transition-all ${
-                  i < waterGlasses
-                    ? "bg-sky-500 text-white text-xs shadow-xs scale-105"
-                    : "bg-sky-200/50 text-sky-400 text-xs"
-                }`}
-              >
-                {i < waterGlasses ? "💧" : "🫧"}
-              </div>
-            ))}
-          </div>
+          {/* Single Bouncy Add Water Button */}
+          <button
+            onClick={() => setWaterGlasses((p) => Math.min(8, p + 1))}
+            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white font-bold text-xs shadow-md shadow-sky-400/25 flex items-center justify-center gap-2 active:scale-98 transition-all"
+          >
+            <span className="text-base">💧</span>
+            <span>+ Drink 1 Glass (250ml)</span>
+          </button>
         </div>
 
         {/* 4. Touch-Friendly Slider Demo */}
-        <div className={`p-4 rounded-3xl bg-white shadow-sm border ${current.cardBorder} mb-4`}>
+        <div className={`p-4 rounded-3xl bg-white/95 shadow-sm border ${current.cardBorder} mb-4`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-black text-slate-800 font-heading">📏 Tactile Stepper Slider</span>
             <span
